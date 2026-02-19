@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model TourCategory {
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique
+  description String?
+  icon        String?
+  tours       Tour[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tour {
+  id              String @id @default(cuid())
+  name            String
+  slug            String @unique
+  shortDescription String
+  description     String
+  duration        String
+  difficulty      String
+  maxAltitude     String?
+  bestSeason      String?
+  price           Float
+  currency        String @default("USD")
+  featured        Boolean @default(false)
+  heroImage       String
+  gallery         String?
+  highlights      String?
+  included        String?
+  notIncluded     String?
+  itinerary       String?
+  categoryId      String?
+  category        TourCategory? @relation(fields: [categoryId], references: [id])
+  bookings        Booking[]
+  departures      TourDeparture[]
+  reviews         Review[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model TourDeparture {
+  id          String   @id @default(cuid())
+  tourId      String
+  tour        Tour     @relation(fields: [tourId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  availableSpots Int
+  price       Float?
+  status      String   @default("available")
+  bookings    Booking[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  bookingRef      String   @unique
+  tourId          String
+  tour            Tour     @relation(fields: [tourId], references: [id])
+  departureId     String?
+  departure       TourDeparture? @relation(fields: [departureId], references: [id])
+  firstName       String
+  lastName        String
+  email           String
+  phone           String
+  country         String
+  numberOfGuests  Int      @default(1)
+  specialRequests String?
+  paymentMethod   String   @default("bank_transfer")
+  paymentStatus   String   @default("pending")
+  totalAmount     Float
+  depositAmount   Float?
+  status          String   @default("pending")
+  adminNotes      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  tourId      String?
+  tour        Tour?    @relation(fields: [tourId], references: [id])
+  guestName   String
+  guestCountry String?
+  rating      Int
+  title       String?
+  content     String
+  featured    Boolean  @default(false)
+  approved    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
