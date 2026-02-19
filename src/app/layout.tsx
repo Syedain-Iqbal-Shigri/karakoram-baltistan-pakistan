@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     "Pakistan adventure travel",
   ],
   authors: [{ name: "Karakoram Baltistan Pakistan" }],
+  icons: {
+    icon: "/favicon.png",
+  },
   openGraph: {
     title: "Karakoram Baltistan Pakistan | Trekking & Adventure Tours",
     description: "Your gateway to the world's greatest mountains. K2 Base Camp, Fairy Meadows, Hunza Valley - discover Pakistan's majestic Karakoram with expert local guides.",
